@@ -9,12 +9,6 @@ import UIKit
 
 class EpisodeTableViewController: UITableViewController {
     
-    var cellHeight: CGFloat = 72 {
-        didSet {
-            tableView.rowHeight = cellHeight
-        }
-    }
-    
     var viewModel: EpisodeDetailTableViewCellViewModel? {
         didSet {
             tableView.reloadData()
@@ -30,8 +24,6 @@ class EpisodeTableViewController: UITableViewController {
     private func setUpUI() {
         view.backgroundColor = K.colors.background
         tableView.register(EpisodeDetailTableViewCell.self, forCellReuseIdentifier: EpisodeDetailTableViewCell.identifier)
-        
-        //tableView.rowHeight = cellHeight
 
     }
 

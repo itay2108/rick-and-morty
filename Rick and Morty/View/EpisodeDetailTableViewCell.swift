@@ -46,7 +46,8 @@ class EpisodeDetailTableViewCell: UITableViewCell {
             make.left.equalToSuperview().offset(36 * widthModifier)
             make.top.equalToSuperview().offset(16 * heightModifier)
             make.bottom.equalToSuperview().offset(-16 * heightModifier)
-            make.width.equalToSuperview().multipliedBy(0.5).offset(-48)
+            make.width.greaterThanOrEqualToSuperview().multipliedBy(0.5).offset(-48)
+            make.width.lessThanOrEqualToSuperview().multipliedBy(0.65)
         }
         
         detail.snp.makeConstraints { make in
