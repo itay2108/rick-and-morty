@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-import Hero
+import MessageUI
 
 class MainViewController: UIViewController {
     
@@ -42,6 +42,11 @@ class MainViewController: UIViewController {
         let view = NotFoundView()
         view.isHidden = true
         return view
+    }()
+    
+    private lazy var hireMeButton: UIBarButtonItem = {
+        let item = UIBarButtonItem(title: "Feedback", style: .plain, target: self, action: #selector(promptFeedback))
+        return item
     }()
     
     private lazy var searchBar: UISearchBar = {
@@ -130,6 +135,9 @@ class MainViewController: UIViewController {
         setConstraintsForSubviews()
         
         setupToHideKeyboardOnTapOnView()
+        
+        navigationItem.rightBarButtonItem = hireMeButton
+        
     }
     
     private func addSubviews() {
@@ -265,6 +273,17 @@ class MainViewController: UIViewController {
         characterGallery.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
     }
     
+    @objc private func promptFeedback() {
+        let alert = UIAlertController(title: "Let me know what you think", message: "Thanks for taking the time to review my app! I've put a lot of thoght and effort into this mini-project to make sure it stands out. Let me know what you think of it 😊", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cta = UIAlertAction(title: "Contact Me", style: .default) { [weak self] action in
+            self?.sendEmail()
+        }
+        alert.addAction(cancel)
+        alert.addAction(cta)
+        present(alert, animated: true)
+    }
+    
     
 }
 
@@ -393,4 +412,33 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         galleryProgressView.setProgress(Float(scrollProgress), animated: true)
     }
     
+}
+
+extension MainViewController: MFMailComposeViewControllerDelegate {
+    
+    @objc private func sendEmail() {
+        if MFMailComposeViewController.canSendMail() {
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = self
+            mail.setToRecipients(["gervash@icloud.com"])
+            mail.setSubject("Rick and Morty App Feedback")
+            if let glutie = UIImage(named: "glutie"),
+               let glutieAsPng = glutie.pngData() {
+                mail.addAttachmentData(glutieAsPng, mimeType: "image/png", fileName:  "glutie.png")
+            }
+
+            present(mail, animated: true)
+        } else {
+            // show failure alert
+            let alert = UIAlertController(title: "Unable to Send E-Mails", message: "Make sure you are connected to the internet and try again.", preferredStyle: .alert)
+            let cancel = UIAlertAction(title: "Dismiss", style: .cancel)
+            alert.addAction(cancel)
+            
+            present(alert, animated: true)
+        }
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true)
+    }
 }

@@ -1,7 +1,6 @@
 import UIKit
 import SnapKit
 import ShimmerSwift
-import Hero
 
 class CharacterCell: UICollectionViewCell {
     
@@ -23,7 +22,6 @@ class CharacterCell: UICollectionViewCell {
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         view.roundCorners(.allCorners, radius: 10 * heightModifier)
-        view.hero.id = "characterImage"
         return view
     }()
 

@@ -1,13 +1,11 @@
 PODS:
   - Alamofire (5.5.0)
-  - Hero (1.6.1)
   - ShimmerSwift (2.1.1)
   - SnapKit (5.0.1)
   - SwiftFontName (4.0.0)
 
 DEPENDENCIES:
   - Alamofire
-  - Hero
   - ShimmerSwift
   - SnapKit
   - SwiftFontName
@@ -15,18 +13,16 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
-    - Hero
     - ShimmerSwift
     - SnapKit
     - SwiftFontName
 
 SPEC CHECKSUMS:
   Alamofire: 1c4fb5369c3fe93d2857c780d8bbe09f06f97e7c
-  Hero: 215865ba3ae41dd9bb08cd6c60a645529c6fc94b
   ShimmerSwift: f7ed2daf9c246de8299dfd9e12c6ab465cba9842
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SwiftFontName: 08aaa0143dadc7753587c4317d9e8a5f2c2418b5
 
-PODFILE CHECKSUM: 5c1b99b2e873ae528013dfc8691602b9978ef0d5
+PODFILE CHECKSUM: d39d43900d9e02aa1771c7a20b4dab4e272547d7
 
 COCOAPODS: 1.11.2

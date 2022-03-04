@@ -24,7 +24,7 @@ class NotFoundView: UIView {
         label.numberOfLines = 2
         label.textAlignment = .center
         label.textColor = .label.withAlphaComponent(0.5)
-        label.text = "Looks like nothing\nwas found"
+        label.text = "Oops! Looks like\nnothing was found"
         return label
     }()
     
