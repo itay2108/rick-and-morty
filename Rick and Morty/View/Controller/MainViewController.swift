@@ -36,6 +36,9 @@ class MainViewController: UIViewController {
     //used to store original data when searching for different characters, so when the user closes the search - the gallert shows the original data.
     private var characterDataSnapshot: [Character]?
     
+    //used to compare later when data changes, so if there were populated cells that were cleared (e.g. search results are empty) - we can show the notFoundView
+    private var collectionViewCellCountSnapshot: Int?
+    
     //MARK: - UI Elements Declaration
     
     private lazy var notFoundView: NotFoundView = {
@@ -307,14 +310,15 @@ extension MainViewController: UISearchBarDelegate {
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-            if self?.characterDataSource.count == 0 {
-                self?.notFoundView.isHidden = false
+        //if we had shown cells and now we dont (which means that search result returned with 0 results - show notFoundView
+            if let _ = collectionViewCellCountSnapshot,
+               characterDataSource.count == 0 {
+                notFoundView.isHidden = false
             } else {
-                self?.notFoundView.isHidden = true
+                notFoundView.isHidden = true
             }
-        }
         
+        collectionViewCellCountSnapshot = characterDataSource.count
         return characterDataSource.count
     }
     
