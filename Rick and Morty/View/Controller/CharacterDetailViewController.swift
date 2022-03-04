@@ -80,12 +80,9 @@ class CharacterDetailViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        //set tableView row height to be dependent on number of rows and height of the view
-        self.characterDetailTableView.rowHeight = (349 * heightModifier) / CGFloat(characterDetailTableView.numberOfRows(inSection: 0))
-        
         //circlize character image view once frame is not 0.0
         characterImageView.circlize()
-        
+
     }
     
     private func setUpUI() {
@@ -97,6 +94,9 @@ class CharacterDetailViewController: UIViewController {
         setConstraintsForSubviews()
         
         characterImageView.image = characterImage
+
+        characterDetailTableView.rowHeight = UITableView.automaticDimension
+        characterDetailTableView.estimatedRowHeight = 96 * heightModifier
         
     }
     
@@ -213,7 +213,6 @@ extension CharacterDetailViewController: UITableViewDelegate, UITableViewDataSou
                     }
                 }
                 
-                destination.cellHeight = tableView.rowHeight
                 self.navigationController?.pushViewController(destination, animated: true)
             }
 

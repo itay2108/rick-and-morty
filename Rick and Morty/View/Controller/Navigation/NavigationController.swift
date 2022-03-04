@@ -6,20 +6,18 @@
 //
 
 import UIKit
+import ShimmerSwift
 
 class NavigationController: UINavigationController {
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationBar.prefersLargeTitles = true
         self.navigationBar.tintColor = .label
-        
+
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.label]
     }
-
-    
     
 }
 

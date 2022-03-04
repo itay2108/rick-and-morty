@@ -25,7 +25,7 @@ class CharacterDetailTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16 * heightModifier, weight: .regular)
         label.contentMode = .right
-        label.numberOfLines = 2
+        label.numberOfLines = 0
         label.textAlignment = .right
         label.textColor = .label.withAlphaComponent(0.66)
 
@@ -42,16 +42,16 @@ class CharacterDetailTableViewCell: UITableViewCell {
     func setConstraintsToSubviews() {
         
         title.snp.makeConstraints { (make) in
-            make.centerY.equalToSuperview()
             make.left.equalToSuperview().offset(36 * widthModifier)
-            make.height.equalToSuperview().multipliedBy(0.75)
+            make.top.equalToSuperview().offset(16 * heightModifier)
+            make.bottom.equalToSuperview().offset(-16 * heightModifier)
             make.width.equalToSuperview().multipliedBy(0.35).offset(-48)
         }
         
         detail.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
             make.right.equalToSuperview().offset(-36 * widthModifier)
-            make.height.equalToSuperview().multipliedBy(0.75)
+            make.top.equalToSuperview().offset(16 * heightModifier)
+            make.bottom.equalToSuperview().offset(-16 * heightModifier)
             make.width.equalToSuperview().multipliedBy(0.5).offset(-28)
         }
         

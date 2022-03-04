@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Hero
 
 class MainViewController: UIViewController {
     
@@ -24,6 +25,7 @@ class MainViewController: UIViewController {
     var nextCharacterPageURL: String?
     var isDisplayingSearchResults: Bool = false
     
+    //main data source for gallery. when set we reload the collection view
     private var characterDataSource: [Character] = [] {
         didSet {
             characterGallery.reloadData()
@@ -82,7 +84,7 @@ class MainViewController: UIViewController {
         cv.backgroundColor = .clear
         cv.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 24 * widthModifier)
         
-        cv.roundCorners([.layerMinXMinYCorner, .layerMinXMaxYCorner], radius: 6 * heightModifier)
+        cv.roundCorners([.layerMinXMinYCorner, .layerMinXMaxYCorner], radius: 10 * heightModifier)
         
         cv.showsVerticalScrollIndicator = false
         cv.showsHorizontalScrollIndicator = false
@@ -191,7 +193,7 @@ class MainViewController: UIViewController {
     
     //used for character search
     private func getCharacterData(by name: String) {
-
+        
         CharacterRetriever.shared.getCharacters(by: name) { [weak self] success, result, nextPageURL, error in
             
             //create a snapshot of initial character data to restore later
@@ -204,18 +206,24 @@ class MainViewController: UIViewController {
                 return
             }
             
-            //hide and scroll (then show again after delay to prevent flickering of cells when data is reloaded
-            self?.characterGallery.isHidden = true
+            //load results and loading ui logic (remove image when loading results, load with shimmer effect and delay to make UI smoother
+            
+            if let visibleCells = self?.characterGallery.visibleCells as? [CharacterCell] {
+                for cell in visibleCells {
+                    cell.imageContainer.image = nil
+                    cell.title.text = ""
+                }
+            }
+            
             if let numberOfItems = self?.characterGallery.numberOfItems(inSection: 0),
-                   numberOfItems >= 4 {
+               numberOfItems >= 4 {
                 self?.characterGallery.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                 //set data source as search result
                 self?.characterDataSource = result ?? []
-                self?.characterGallery.reloadData()
-                self?.characterGallery.isHidden = false
                 
                 self?.isDisplayingSearchResults = true
             }
@@ -253,6 +261,8 @@ class MainViewController: UIViewController {
     
     @objc private func searchBarXButtonTapped(_ button: UIButton) {
         searchBar.resignFirstResponder()
+        
+        characterGallery.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
     }
     
     
@@ -277,10 +287,13 @@ extension MainViewController: UISearchBarDelegate {
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if characterDataSource.count == 0 {
-            notFoundView.isHidden = false
-        } else {
-            notFoundView.isHidden = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            if self?.characterDataSource.count == 0 {
+                self?.notFoundView.isHidden = false
+            } else {
+                self?.notFoundView.isHidden = true
+            }
         }
         
         return characterDataSource.count
@@ -326,6 +339,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 cell.setContent(with: cellData)
             }
         }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -345,19 +359,20 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let destination = CharacterDetailViewController()
         var characterToDisplay = characterDataSource[indexPath.row]
         
-        //get list of [Episode] objects to show in the destination/
+        //get list of [Episode] objects to show in the destination
         CharacterRetriever.shared.getEpisodes(by: characterToDisplay.numericEpisodeList()) { success, result, error in
             if success {
                 characterToDisplay.episodeList = result
                 destination.viewModel = CharacterDetailTableViewCellViewModel(with: characterToDisplay)
+                destination.characterImage = (collectionView.cellForItem(at: indexPath) as? CharacterCell)?.imageContainer.image
+                destination.title = characterToDisplay.name.capitalized
             } else {
                 print("error: \(String(describing: error))")
             }
+            
+            self.navigationController?.pushViewController(destination, animated: true)
         }
         
-        destination.characterImage = (collectionView.cellForItem(at: indexPath) as? CharacterCell)?.imageContainer.image
-        
-        self.navigationController?.pushViewController(destination, animated: true)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

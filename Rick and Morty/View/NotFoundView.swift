@@ -12,7 +12,7 @@ class NotFoundView: UIView {
     
     private lazy var imageContainer: UIImageView = {
        let view = UIImageView()
-        view.image = UIImage(named: "notFound")
+        view.image = K.images.notFound
         view.contentMode = .scaleAspectFit
         return view
     }()

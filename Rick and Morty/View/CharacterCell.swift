@@ -1,16 +1,29 @@
 import UIKit
 import SnapKit
+import ShimmerSwift
+import Hero
 
 class CharacterCell: UICollectionViewCell {
     
     static let identifier: String = "CharacterCell"
+    
+    private var imageChangeObservation: NSKeyValueObservation?
+    
+    private lazy var shimmerContainer: ShimmeringView = {
+       let shimmer = ShimmeringView()
+        shimmer.isShimmering = false
+        shimmer.shimmerAnimationOpacity = 0.75
+        shimmer.roundCorners(.allCorners, radius: 10 * heightModifier)
+        return shimmer
+    }()
     
     lazy var imageContainer: UIImageView = {
        let view = UIImageView()
         view.backgroundColor = UIColor(red: 0.854, green: 0.886, blue: 0.929, alpha: 0.85)
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
-        view.layer.cornerRadius = 6 * heightModifier
+        view.roundCorners(.allCorners, radius: 10 * heightModifier)
+        view.hero.id = "characterImage"
         return view
     }()
 
@@ -30,36 +43,28 @@ class CharacterCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var loadingIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .medium)
-        indicator.hidesWhenStopped = true
-        indicator.color = .darkGray
-        return indicator
-    }()
-    
     func addSubviews() {
-        self.addSubview(imageContainer)
+        self.addSubview(shimmerContainer)
+        shimmerContainer.contentView = imageContainer
+        
         self.addSubview(titleContainer)
 
         titleContainer.addSubview(title)
-        
-        self.addSubview(loadingIndicator)
-        loadingIndicator.startAnimating()
     }
     
     func setConstraintsToSubviews() {
-        imageContainer.snp.makeConstraints { (make) in
+        shimmerContainer.snp.makeConstraints { (make) in
             make.top.equalToSuperview()
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.height.equalToSuperview().multipliedBy(0.7)
+            make.height.equalToSuperview().multipliedBy(0.67)
         }
         
         titleContainer.snp.makeConstraints { (make) in
             make.top.equalTo(imageContainer.snp.bottom)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.height.equalToSuperview().multipliedBy(0.2)
+            make.height.equalToSuperview().multipliedBy(0.33)
         }
         
         
@@ -68,12 +73,6 @@ class CharacterCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.left.equalToSuperview().offset(16 * widthModifier)
             make.height.equalToSuperview().multipliedBy(0.75)
-        }
-        
-        loadingIndicator.snp.makeConstraints { (make) in
-            make.center.equalTo(self.imageContainer.snp.center)
-            make.height.equalTo(self.imageContainer.snp.height).multipliedBy(0.14)
-            make.width.equalTo(self.imageContainer.snp.height).multipliedBy(0.14)
         }
         
     }
@@ -89,7 +88,6 @@ class CharacterCell: UICollectionViewCell {
                 if success {
                     if let image = result {
                         self.imageContainer.image = image
-                        self.loadingIndicator.stopAnimating()
                     }
                 }
             }
@@ -97,10 +95,29 @@ class CharacterCell: UICollectionViewCell {
 
     }
     
+    func setupKVOs() {
+        imageChangeObservation = imageContainer.observe(\.image, options: [.new]) { [weak self] (object, change) in
+            if self?.imageContainer.image == nil {
+                self?.shimmerContainer.isShimmering = true
+            } else {
+                self?.shimmerContainer.isShimmering = false
+            }
+        }
+    }
+    
+    func stopShimmering() {
+        self.shimmerContainer.isShimmering = false
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
         setConstraintsToSubviews()
+        
+        //shimmering on when image is nil
+        setupKVOs()
+        
+        
         
     }
     
@@ -110,5 +127,9 @@ class CharacterCell: UICollectionViewCell {
     
     convenience init() {
         self.init(frame: .zero)
+    }
+    
+    deinit {
+        imageChangeObservation?.invalidate()
     }
 }

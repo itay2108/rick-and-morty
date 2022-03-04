@@ -43,16 +43,16 @@ class EpisodeDetailTableViewCell: UITableViewCell {
     func setConstraintsToSubviews() {
         
         title.snp.makeConstraints { (make) in
-            make.centerY.equalToSuperview()
             make.left.equalToSuperview().offset(36 * widthModifier)
-            make.height.equalToSuperview().multipliedBy(0.75)
-            make.width.greaterThanOrEqualToSuperview().multipliedBy(0.5)
+            make.top.equalToSuperview().offset(16 * heightModifier)
+            make.bottom.equalToSuperview().offset(-16 * heightModifier)
+            make.width.equalToSuperview().multipliedBy(0.35).offset(-48)
         }
         
         detail.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
             make.right.equalToSuperview().offset(-36 * widthModifier)
-            make.height.equalToSuperview().multipliedBy(0.75)
+            make.top.equalToSuperview().offset(16 * heightModifier)
+            make.bottom.equalToSuperview().offset(-16 * heightModifier)
             make.width.lessThanOrEqualToSuperview().multipliedBy(0.5)
         }
         

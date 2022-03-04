@@ -13,4 +13,9 @@ struct K {
         static let background = UIColor(named: "background")
         static let pickleGreen = UIColor(named: "pickleGreen")
     }
+    
+    struct images {
+        static let splash = UIImage(named: "splash")
+        static let notFound = UIImage(named: "notFound")
+    }
 }

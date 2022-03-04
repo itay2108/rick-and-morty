@@ -7,9 +7,10 @@ target 'Rick and Morty' do
 
   # Pods for Rick and Morty
 
-	pod 'Motion'
+	pod 'Hero'
 	pod 'SnapKit'
 	pod 'Alamofire'
  	pod 'SwiftFontName'
+	pod 'ShimmerSwift'
 
 end

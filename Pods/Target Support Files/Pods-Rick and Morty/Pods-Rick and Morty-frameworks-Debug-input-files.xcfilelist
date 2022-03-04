@@ -1,5 +1,6 @@
 ${PODS_ROOT}/Target Support Files/Pods-Rick and Morty/Pods-Rick and Morty-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework
-${BUILT_PRODUCTS_DIR}/Motion/Motion.framework
+${BUILT_PRODUCTS_DIR}/Hero/Hero.framework
+${BUILT_PRODUCTS_DIR}/ShimmerSwift/ShimmerSwift.framework
 ${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework
 ${BUILT_PRODUCTS_DIR}/SwiftFontName/SwiftFontName.framework
