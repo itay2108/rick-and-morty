@@ -24,7 +24,7 @@ class CharacterCell: UICollectionViewCell {
         label.font = .systemFont(ofSize: 14 * heightModifier, weight: .medium)
         label.minimumScaleFactor = 10 * heightModifier
         label.contentMode = .left
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.textAlignment = .center
         label.textColor = .label
         return label

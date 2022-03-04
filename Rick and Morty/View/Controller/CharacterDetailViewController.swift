@@ -38,10 +38,6 @@ class CharacterDetailViewController: UIViewController {
         table.backgroundColor = .clear
         table.showsVerticalScrollIndicator = false
         
-//      Did you mean this when asking about cell height during the interview?
-//      table.rowHeight = UITableView.automaticDimension
-//      table.estimatedRowHeight = 96.0 * heightModifier
-        
         return table
     }()
     
@@ -150,7 +146,7 @@ class CharacterDetailViewController: UIViewController {
     //MARK: - Targets
     
     private func shareButtonTapped() {
-        
+        //create image that contains character image + character details and open sharing options
         UIGraphicsBeginImageContextWithOptions(CGSize(width: contentContainer.frame.size.width, height: contentContainer.frame.size.height + (56 * heightModifier)), true, 0.0)
         self.view.drawHierarchy(in: CGRect(x: view.bounds.minX, y: view.bounds.minY - (safeAreaSize(from: .top) + (self.navigationController?.navigationBar.bounds.height ?? 0)), width: view.bounds.width, height: view.bounds.height),afterScreenUpdates: false)
         let img = UIGraphicsGetImageFromCurrentImageContext()
@@ -175,7 +171,7 @@ extension CharacterDetailViewController: UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 { return "Details" }
-        else if section == 1 { return "Episodes"}
+        else if section == 1 { return "Episodes (\(viewModel?.episodeDetails.count ?? 0))"}
         else { return nil }
     }
     

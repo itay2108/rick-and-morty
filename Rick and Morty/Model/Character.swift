@@ -7,7 +7,12 @@
 
 import Foundation
 
-struct Character: Codable {
+struct Character: Codable, Equatable {
+    static func == (lhs: Character, rhs: Character) -> Bool {
+        if lhs.name == rhs.name { return true }
+        else { return false }
+    }
+    
     let id: Int
     let name: String
     let status: String

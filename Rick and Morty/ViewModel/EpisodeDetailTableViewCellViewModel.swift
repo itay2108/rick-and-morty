@@ -11,6 +11,7 @@ struct EpisodeDetailTableViewCellViewModel {
     var details: [(Detail, String)] = []
     var characterNames: [String] = []
     
+    //initialize after setting episode.characterNames
     init(with episode: Episode) {
         details.append((.name, episode.name))
         details.append((.airDate, episode.airDate))
