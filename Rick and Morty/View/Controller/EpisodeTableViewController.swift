@@ -31,7 +31,7 @@ class EpisodeTableViewController: UITableViewController {
         view.backgroundColor = K.colors.background
         tableView.register(EpisodeDetailTableViewCell.self, forCellReuseIdentifier: EpisodeDetailTableViewCell.identifier)
         
-        tableView.rowHeight = cellHeight
+        //tableView.rowHeight = cellHeight
 
     }
 

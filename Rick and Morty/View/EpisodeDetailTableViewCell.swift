@@ -15,7 +15,7 @@ class EpisodeDetailTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16 * heightModifier, weight: .medium)
         label.contentMode = .left
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.textAlignment = .left
         label.textColor = .label
         return label
@@ -25,7 +25,7 @@ class EpisodeDetailTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16 * heightModifier, weight: .regular)
         label.contentMode = .right
-        label.numberOfLines = 2
+        label.numberOfLines = 0
         label.textAlignment = .right
         label.textColor = .label.withAlphaComponent(0.66)
         label.minimumScaleFactor = 0.66
