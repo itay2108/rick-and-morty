@@ -17,6 +17,7 @@
 		660C6E2627D124460081ABA4 /* EpisodeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660C6E2527D124460081ABA4 /* EpisodeTableViewController.swift */; };
 		660C6E2827D129890081ABA4 /* EpisodeDetailTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660C6E2727D129890081ABA4 /* EpisodeDetailTableViewCellViewModel.swift */; };
 		660C6E2A27D12D2B0081ABA4 /* EpisodeDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660C6E2927D12D2B0081ABA4 /* EpisodeDetailTableViewCell.swift */; };
+		661D952327D39B54000613F6 /* ScrollToTopButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661D952227D39B54000613F6 /* ScrollToTopButton.swift */; };
 		66A2EED927D19B1800240958 /* NotFoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A2EED827D19B1800240958 /* NotFoundView.swift */; };
 		66F8BEDC27CF8AA600032629 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F8BEDB27CF8AA600032629 /* AppDelegate.swift */; };
 		66F8BEDE27CF8AA600032629 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F8BEDD27CF8AA600032629 /* SceneDelegate.swift */; };
@@ -43,6 +44,7 @@
 		660C6E2527D124460081ABA4 /* EpisodeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeTableViewController.swift; sourceTree = "<group>"; };
 		660C6E2727D129890081ABA4 /* EpisodeDetailTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeDetailTableViewCellViewModel.swift; sourceTree = "<group>"; };
 		660C6E2927D12D2B0081ABA4 /* EpisodeDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeDetailTableViewCell.swift; sourceTree = "<group>"; };
+		661D952227D39B54000613F6 /* ScrollToTopButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollToTopButton.swift; sourceTree = "<group>"; };
 		66A2EED827D19B1800240958 /* NotFoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotFoundView.swift; sourceTree = "<group>"; };
 		66F8BED827CF8AA600032629 /* Rick and Morty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rick and Morty.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F8BEDB27CF8AA600032629 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				660C6E1B27D027570081ABA4 /* CharacterDetailTableViewCell.swift */,
 				660C6E2927D12D2B0081ABA4 /* EpisodeDetailTableViewCell.swift */,
 				66A2EED827D19B1800240958 /* NotFoundView.swift */,
+				661D952227D39B54000613F6 /* ScrollToTopButton.swift */,
 				66F8BEFE27CF94F000032629 /* Controller */,
 			);
 			path = View;
@@ -306,6 +309,7 @@
 				660C6E2227D0F7290081ABA4 /* Episode.swift in Sources */,
 				66F8BEE027CF8AA600032629 /* MainViewController.swift in Sources */,
 				660C6E1C27D027570081ABA4 /* CharacterDetailTableViewCell.swift in Sources */,
+				661D952327D39B54000613F6 /* ScrollToTopButton.swift in Sources */,
 				66F8BF0727CF983000032629 /* CharacterData.swift in Sources */,
 				660C6E2827D129890081ABA4 /* EpisodeDetailTableViewCellViewModel.swift in Sources */,
 				66F8BEFC27CF933D00032629 /* NavigationController.swift in Sources */,

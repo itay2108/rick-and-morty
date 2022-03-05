@@ -92,9 +92,19 @@ class MainViewController: UIViewController {
     private lazy var galleryProgressView: UIProgressView = {
         let progressView = UIProgressView()
         progressView.progressTintColor = K.colors.pickleGreen
-        progressView.backgroundColor = K.colors.pickleGreen?.withAlphaComponent(0.3)
         
+        progressView.trackTintColor = K.colors.pickleGreen?.withAlphaComponent(0.13)
         return progressView
+    }()
+    
+    private lazy var scrollToTopButton: ScrollToTopButton = {
+        let button = ScrollToTopButton(anchorTo: .right)
+        button.arrowImageView.tintColor = K.colors.pickleGreen
+        button.backgroundColor = K.colors.pickleGreen?.withAlphaComponent(0.13)
+        button.isHidden = true
+        
+        button.addTarget(self, action: #selector(scrollToTopButtonTapped(_:)), for: .touchUpInside)
+        return button
     }()
     
     override func viewDidLoad() {
@@ -137,6 +147,7 @@ class MainViewController: UIViewController {
         view.addSubview(notFoundView)
         view.addSubview(characterGallery)
         view.addSubview(galleryProgressView)
+        view.addSubview(scrollToTopButton)
     }
     
     private func setConstraintsForSubviews() {
@@ -168,6 +179,13 @@ class MainViewController: UIViewController {
             make.height.equalTo(8 * heightModifier)
             make.width.equalToSuperview().multipliedBy(0.35)
             make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-38 * heightModifier)
+        }
+        
+        scrollToTopButton.snp.makeConstraints { make in
+            make.right.equalToSuperview()
+            make.height.equalTo(48 * heightModifier)
+            make.width.equalTo(56 * widthModifier)
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-18 * heightModifier)
         }
         
@@ -283,6 +301,14 @@ class MainViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    @objc private func scrollToTopButtonTapped(_ button: UIButton) {
+        let numberOfItems = characterGallery.numberOfItems(inSection: 0)
+        if numberOfItems >= 4 {
+            characterGallery.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: true)
+        }
+        
+    }
+    
     
 }
 
@@ -295,9 +321,17 @@ extension MainViewController: UISearchBarDelegate {
             getCharacterData(by: name)
         } else {
             restoreCharacterDataFromSnapshot()
+            searchBar.setShowsCancelButton(false, animated: true)
         }
         
         self.searchBar.resignFirstResponder()
+        
+        //if we are displaying search results leave the cancel button enabled
+        if isDisplayingSearchResults {
+            if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
+                cancelButton.isEnabled = true
+            }
+        }
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -317,16 +351,23 @@ extension MainViewController: UISearchBarDelegate {
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        //if we had shown cells and now we dont (which means that search result returned with 0 results - show notFoundView
-            if let _ = collectionViewCellCountSnapshot,
-               characterDataSource.count == 0 {
-                notFoundView.isHidden = false
-            } else {
+        //if theres no data yet -
+        if characterDataSource.count == 0 {
+            //and no memory of any data - it means we still havent loaded the first results; load 4 dummy cells
+            if characterDataSnapshot == nil {
                 notFoundView.isHidden = true
+                return 4
+            } else {
+                //if there is memory of data, it means we are searched with no results. dont load dummy characters and show Jerry
+                notFoundView.isHidden = false
+                return 0
             }
-        
-        collectionViewCellCountSnapshot = characterDataSource.count
-        return characterDataSource.count != 0 ? characterDataSource.count : 4
+        } else {
+            //if there is data we show it and save it to memory.
+            notFoundView.isHidden = true
+            collectionViewCellCountSnapshot = characterDataSource.count
+            return characterDataSource.count
+        }
     }
     
     //define cell size
@@ -421,6 +462,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let scrollProgress = contentXoffset / (scrollView.contentSize.width - scrollView.frame.width)
         
         galleryProgressView.setProgress(Float(scrollProgress), animated: true)
+        
+        //fade scroll button in and out dependint on how much of the gallery is scrolled
+        if contentXoffset > view.frameWidth / 1.66 && scrollToTopButton.isHidden {
+            scrollToTopButton.fadeIn()
+        } else if contentXoffset < view.frameWidth / 1.66 && !scrollToTopButton.isHidden {
+            scrollToTopButton.fadeOut()
+        }
     }
     
 }
