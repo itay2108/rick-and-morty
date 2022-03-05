@@ -28,7 +28,11 @@ class MainViewController: UIViewController {
     //main data source for gallery. when set we reload the collection view
     private var characterDataSource: [Character] = [] {
         didSet {
-            characterGallery.reloadData()
+
+            DispatchQueue.global(qos: .userInitiated).sync { [weak self] in
+                self?.characterGallery.reloadData()
+            }
+
             didReachScrollingRefreshPoint = false
         }
     }
@@ -56,7 +60,7 @@ class MainViewController: UIViewController {
         let bar = UISearchBar()
         bar.tintColor = .gray
         bar.searchBarStyle = .minimal
-        bar.placeholder = "search"
+        bar.placeholder = "Search"
         bar.returnKeyType = .search
         
         bar.enablesReturnKeyAutomatically = false
@@ -72,7 +76,7 @@ class MainViewController: UIViewController {
         //close keyboard when x button tapped in search bar
         if let clearButton = bar.searchTextField.value(forKey: "_clearButton") as? UIButton {
             clearButton.addTarget(self, action: #selector(searchBarXButtonTapped(_:)), for: .touchUpInside)
-            
+
         }
         
         bar.searchTextField.addTarget(self, action: #selector(searchBarTextDidChange(_:)), for: .editingChanged)
@@ -249,9 +253,13 @@ class MainViewController: UIViewController {
     //used to restore initial data after clearing search
     private func restoreCharacterDataFromSnapshot() {
         if let characterDataSnapshot = characterDataSnapshot {
-            characterDataSource = characterDataSnapshot
-            isDisplayingSearchResults = false
-            characterGallery.reloadData()
+            
+            //without the delay - dataSource updates that are coming from textFieldObserver are slower to arrive, which was causing unexpected behaviour when deleting search text quickly.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.33) { [weak self] in
+                self?.characterDataSource = characterDataSnapshot
+                self?.isDisplayingSearchResults = false
+            }
+
         }
     }
     
@@ -263,6 +271,7 @@ class MainViewController: UIViewController {
             getCharacterData(by: name)
         } else {
             restoreCharacterDataFromSnapshot()
+            searchBar.setShowsCancelButton(false, animated: true)
         }
     }
     
@@ -271,9 +280,12 @@ class MainViewController: UIViewController {
     }
     
     @objc private func searchBarXButtonTapped(_ button: UIButton) {
-        searchBar.resignFirstResponder()
-        
-        characterGallery.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: true)
+
+        let numberOfItems = characterGallery.numberOfItems(inSection: 0)
+
+        if numberOfItems >= 4 {
+            characterGallery.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
+        }
     }
     
     @objc private func promptFeedback() {
@@ -303,6 +315,17 @@ extension MainViewController: UISearchBarDelegate {
         
         self.searchBar.resignFirstResponder()
     }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.searchTextField.text = ""
+        searchBar.setShowsCancelButton(false, animated: true)
+        restoreCharacterDataFromSnapshot()
+    }
+
 }
 
 //MARK: - Collectionview Methods

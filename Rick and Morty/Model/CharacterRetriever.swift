@@ -15,9 +15,9 @@ class CharacterRetriever {
     static let baseURL: String = "https://rickandmortyapi.com/api/character"
     
     func getCharacters(url: String = baseURL, completion: @escaping ((_ success: Bool, _ result: [Character]?, _ nextPageURL: String?, _ error: AFError?) -> Void)) {
-        
+
         DispatchQueue.global(qos: .background).async {
-            
+
             let request = AF.request(url)
             
             request.responseDecodable(of: CharacterData.self) { response in
@@ -47,7 +47,6 @@ class CharacterRetriever {
         DispatchQueue.global(qos: .background).async {
             
             let url = CharacterRetriever.baseURL + "/?name=" + name.replacingOccurrences(of: " ", with: "+")
-            
             let request = AF.request(url)
             
             request.responseDecodable(of: CharacterData.self) { response in
