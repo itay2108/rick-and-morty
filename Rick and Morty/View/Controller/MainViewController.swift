@@ -11,29 +11,13 @@ import MessageUI
 
 class MainViewController: UIViewController {
     
-    // pagination / infinite scroll. when scrolling almost to the end of the gallery, this value turns into true (once!) and the character data method gets called with the next page url from the last response which is saved under nextCharacterPageURL
-    private var didReachScrollingRefreshPoint: Bool = false {
-        didSet {
-            
-            if didReachScrollingRefreshPoint && !isDisplayingSearchResults {
-                guard let nextCharacterPageURL = nextCharacterPageURL else { return }
-                
-                getCharacterData(from: nextCharacterPageURL)
-            }
-        }
-    }
     var nextCharacterPageURL: String?
     var isDisplayingSearchResults: Bool = false
     
     //main data source for gallery. when set we reload the collection view
     private var characterDataSource: [Character] = [] {
         didSet {
-
-            DispatchQueue.global(qos: .userInitiated).sync { [weak self] in
-                self?.characterGallery.reloadData()
-            }
-
-            didReachScrollingRefreshPoint = false
+            characterGallery.reloadData()
         }
     }
     
@@ -101,6 +85,7 @@ class MainViewController: UIViewController {
         cv.showsVerticalScrollIndicator = false
         cv.showsHorizontalScrollIndicator = false
         
+        cv.decelerationRate = .fast
         return cv
     }()
     
@@ -175,7 +160,7 @@ class MainViewController: UIViewController {
             make.top.equalTo(searchBar.snp.bottom).offset(28 * heightModifier)
             make.left.equalToSuperview().offset(24 * widthModifier)
             make.right.equalToSuperview()//.offset(-24 * widthModifier)
-            make.bottom.equalTo(galleryProgressView.snp.top).offset(-12 * heightModifier)
+            make.bottom.equalTo(galleryProgressView.snp.top).offset(-24 * heightModifier)
             
         }
         
@@ -183,7 +168,7 @@ class MainViewController: UIViewController {
             make.height.equalTo(8 * heightModifier)
             make.width.equalToSuperview().multipliedBy(0.35)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-32 * heightModifier)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-18 * heightModifier)
         }
         
     }
@@ -192,6 +177,7 @@ class MainViewController: UIViewController {
     
     //method used for getting the initial data (first page)
     private func getCharacterData(from url: String) {
+        
         CharacterRetriever.shared.getCharacters(url: url) { [weak self] success, result, nextPage, error in
             
             if success {
@@ -202,8 +188,9 @@ class MainViewController: UIViewController {
             } else {
                 print("could get characters: \(String(describing: error))")
             }
-            
         }
+        
+
     }
     
     //used for character search
@@ -235,13 +222,10 @@ class MainViewController: UIViewController {
                 self?.characterGallery.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
             }
             
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                 //set data source as search result
                 self?.characterDataSource = result ?? []
-                
                 self?.isDisplayingSearchResults = true
-            }
+
             
             if let error = error  {
                 print(error.errorDescription ?? "unknown error getting characters by name")
@@ -254,11 +238,8 @@ class MainViewController: UIViewController {
     private func restoreCharacterDataFromSnapshot() {
         if let characterDataSnapshot = characterDataSnapshot {
             
-            //without the delay - dataSource updates that are coming from textFieldObserver are slower to arrive, which was causing unexpected behaviour when deleting search text quickly.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.33) { [weak self] in
-                self?.characterDataSource = characterDataSnapshot
-                self?.isDisplayingSearchResults = false
-            }
+            characterDataSource = characterDataSnapshot
+            isDisplayingSearchResults = false
 
         }
     }
@@ -276,6 +257,9 @@ class MainViewController: UIViewController {
     }
     
     @objc private func hideKeyboardBarItemTapped(_ item: UIBarButtonItem) {
+        if !isDisplayingSearchResults {
+            searchBar.setShowsCancelButton(false, animated: true)
+        }
         searchBar.resignFirstResponder()
     }
     
@@ -289,7 +273,7 @@ class MainViewController: UIViewController {
     }
     
     @objc private func promptFeedback() {
-        let alert = UIAlertController(title: "Let me know what you think", message: "Thanks for taking the time to review my app! I've put a lot of thoght and effort into this mini-project to make sure it stands out. Let me know what you think of it 😊", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Let me know what you think", message: "Thanks for taking the time to review my app! I've put a lot of thoght and care into this mini-project to make sure it stands out 😊", preferredStyle: .alert)
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let cta = UIAlertAction(title: "Contact Me", style: .default) { [weak self] action in
             self?.sendEmail()
@@ -342,7 +326,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             }
         
         collectionViewCellCountSnapshot = characterDataSource.count
-        return characterDataSource.count
+        return characterDataSource.count != 0 ? characterDataSource.count : 4
     }
     
     //define cell size
@@ -373,29 +357,40 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         cell.setContent(with: cellData)
         
+        //when populating last cell - load next page if available
+        if indexPath.row == characterDataSource.count - 1 {
+            guard let nextCharacterPageURL = nextCharacterPageURL else { return cell }
+            print("getting next page ")
+            
+            getCharacterData(from: nextCharacterPageURL)
+        }
+        
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         //sometimes cells dont load when returning to view. this makes sure they do.
-        let cellData = CharacterCellViewModel(with: characterDataSource[indexPath.row])
-        
+
         if let cell = cell as? CharacterCell {
             if cell.imageContainer.image == nil {
+                guard characterDataSource.count > indexPath.row else { return }
+                let cellData = CharacterCellViewModel(with: characterDataSource[indexPath.row])
+                
+                cell.stopShimmering()
                 cell.setContent(with: cellData)
             }
         }
-        
+
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         //remove cell image data when not displayed to save memory
-        
+
         if let cell = cell as? CharacterCell {
             cell.imageContainer.image = nil
             cell.title.text = nil
         }
-        
+
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -422,19 +417,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let width = scrollView.frame.size.width
         let contentXoffset = scrollView.contentOffset.x
-        let distanceFromEnd = scrollView.contentSize.width - contentXoffset
         let scrollProgress = contentXoffset / (scrollView.contentSize.width - scrollView.frame.width)
-        
-        //trigger refresh point a little bit before the end of the collection view.
-        if distanceFromEnd - (view.frameWidth / 1.5) < width && scrollView.contentSize.width > 0 {
-            //set this value only once so didSet doesnt cause the api to be called numerous times in a row. after the gallery is updated with additional data, this value is reset to false.
-            if !didReachScrollingRefreshPoint {
-                didReachScrollingRefreshPoint = true
-            }
-        }
-        
         
         galleryProgressView.setProgress(Float(scrollProgress), animated: true)
     }
