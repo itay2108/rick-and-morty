@@ -23,6 +23,7 @@ class MainViewController: UIViewController {
     
     //used to store original data when searching for different characters, so when the user closes the search - the gallert shows the original data.
     private var characterDataSnapshot: [Character]?
+    private var nextPageURLSnapshot: String?
     
     //used to compare later when data changes, so if there were populated cells that were cleared (e.g. search results are empty) - we can show the notFoundView
     private var collectionViewCellCountSnapshot: Int?
@@ -121,6 +122,11 @@ class MainViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        characterGallery.reloadData()
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         galleryProgressView.circlize()
@@ -201,11 +207,13 @@ class MainViewController: UIViewController {
             if success {
                 if let resultAsCharacters = result {
                     self?.characterDataSource += resultAsCharacters
-                    self?.nextCharacterPageURL = nextPage
                 }
             } else {
                 print("could get characters: \(String(describing: error))")
             }
+            
+            self?.nextCharacterPageURL = nextPage
+            self?.nextPageURLSnapshot = nextPage
         }
         
 
@@ -214,7 +222,7 @@ class MainViewController: UIViewController {
     //used for character search
     private func getCharacterData(by name: String) {
         
-        CharacterRetriever.shared.getCharacters(by: name) { [weak self] success, result, nextPageURL, error in
+        CharacterRetriever.shared.getCharacters(by: name) { [weak self] success, result, nextPage, error in
             
             //create a snapshot of initial character data to restore later
             if self?.characterDataSnapshot == nil {
@@ -243,7 +251,7 @@ class MainViewController: UIViewController {
                 //set data source as search result
                 self?.characterDataSource = result ?? []
                 self?.isDisplayingSearchResults = true
-
+                self?.nextCharacterPageURL = nextPage
             
             if let error = error  {
                 print(error.errorDescription ?? "unknown error getting characters by name")
@@ -257,6 +265,7 @@ class MainViewController: UIViewController {
         if let characterDataSnapshot = characterDataSnapshot {
             
             characterDataSource = characterDataSnapshot
+            nextCharacterPageURL = nextPageURLSnapshot
             isDisplayingSearchResults = false
 
         }
@@ -399,10 +408,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.setContent(with: cellData)
         
         //when populating last cell - load next page if available
-        if indexPath.row == characterDataSource.count - 1 {
+        if indexPath.row == characterDataSource.count - 3 {
             guard let nextCharacterPageURL = nextCharacterPageURL else { return cell }
-            print("getting next page ")
-            
+            print("getting next page")
             getCharacterData(from: nextCharacterPageURL)
         }
         
@@ -464,9 +472,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         galleryProgressView.setProgress(Float(scrollProgress), animated: true)
         
         //fade scroll button in and out dependint on how much of the gallery is scrolled
-        if contentXoffset > view.frameWidth / 1.66 && scrollToTopButton.isHidden {
+        if contentXoffset > view.frameWidth / 3 && scrollToTopButton.isHidden {
             scrollToTopButton.fadeIn()
-        } else if contentXoffset < view.frameWidth / 1.66 && !scrollToTopButton.isHidden {
+        } else if contentXoffset < view.frameWidth / 3 && !scrollToTopButton.isHidden {
             scrollToTopButton.fadeOut()
         }
     }

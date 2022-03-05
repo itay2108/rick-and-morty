@@ -79,7 +79,7 @@ class CharacterCell: UICollectionViewCell {
 
         self.title.text = data.name
         
-        if data.image != nil {
+        if data.image != nil && data.image != imageContainer.image {
             self.imageContainer.image = data.image!
         } else {
             CharacterRetriever.shared.getCharacterImage(of: data.imageUrl) { success, result, error in

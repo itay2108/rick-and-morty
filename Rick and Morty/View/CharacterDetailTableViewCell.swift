@@ -66,6 +66,7 @@ class CharacterDetailTableViewCell: UITableViewCell {
         title.text = indexPath.section == 0 ? (data.details[indexPath.row].0.rawValue + ":").capitalized : data.episodeDetails[indexPath.row].0
         detail.text = indexPath.section == 0 ? data.details[indexPath.row].1 : data.episodeDetails[indexPath.row].1
         
+        self.accessoryType = indexPath.section == 0 ? .none : .disclosureIndicator
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

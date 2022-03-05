@@ -35,7 +35,7 @@ class EpisodeTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 { return "Details" }
-        else if section == 1 { return "Characters"}
+        else if section == 1 { return "Characters (\(viewModel?.characterNames.count ?? 0))"}
         else { return nil }
     }
     
