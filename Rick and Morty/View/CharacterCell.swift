@@ -82,10 +82,12 @@ class CharacterCell: UICollectionViewCell {
         if data.image != nil && data.image != imageContainer.image {
             self.imageContainer.image = data.image!
         } else {
-            CharacterRetriever.shared.getCharacterImage(of: data.imageUrl) { success, result, error in
+            CharacterRetriever.shared.getCharacterImage(of: data.imageUrl) { [weak self] success, result, error in
                 if success {
                     if let image = result {
-                        self.imageContainer.image = image
+                        self?.setNeedsLayout()
+                        self?.imageContainer.image = image
+                        self?.layoutIfNeeded()
                     }
                 }
             }
