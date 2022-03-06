@@ -393,6 +393,10 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         //set cell as custom character cell class
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CharacterCell.identifier, for: indexPath) as! CharacterCell
         
+        //enable rasterization to reduce lag when loading cells
+        cell.layer.shouldRasterize = true
+        cell.layer.rasterizationScale = UIScreen.main.scale
+        
         //error cell is an empty cell that displays if theres an "index out of range" bug for any reason, to prevent crashes.
         let errorCell = collectionView.dequeueReusableCell(withReuseIdentifier: CharacterCell.identifier, for: indexPath) as! CharacterCell
         errorCell.title.text = ""
