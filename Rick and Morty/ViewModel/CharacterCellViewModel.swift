@@ -12,10 +12,12 @@ struct CharacterCellViewModel {
     
     var imageUrl: String
     
-    var image: UIImage? = nil
+    var image: UIImage?
     
-    init(with character: Character) {
+    init(with character: Character, image characterImage: UIImage) {
         self.name = character.name
         self.imageUrl = character.imageURL
+        
+        self.image = characterImage
     }
 }

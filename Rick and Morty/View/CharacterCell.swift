@@ -8,6 +8,8 @@ class CharacterCell: UICollectionViewCell {
     
     private var imageChangeObservation: NSKeyValueObservation?
     
+    var onReuse: () -> Void = {}
+    
     private lazy var shimmerContainer: ShimmeringView = {
        let shimmer = ShimmeringView()
         shimmer.isShimmering = false
@@ -78,20 +80,7 @@ class CharacterCell: UICollectionViewCell {
     func setContent(with data: CharacterCellViewModel) {
         
         self.title.text = data.name
-        
-        if data.image != nil && data.image != imageContainer.image {
-            self.imageContainer.image = data.image!
-        } else {
-            CharacterRetriever.shared.getCharacterImage(of: data.imageUrl) { [weak self] success, result, error in
-                if success {
-                    if let image = result {
-                        self?.setNeedsLayout()
-                        self?.imageContainer.image = image
-                        self?.layoutIfNeeded()
-                    }
-                }
-            }
-        }
+        self.imageContainer.image = data.image
 
     }
     
@@ -119,6 +108,12 @@ class CharacterCell: UICollectionViewCell {
         
         
         
+    }
+    
+    override func prepareForReuse() {
+      super.prepareForReuse()
+      onReuse()
+      imageContainer.image = nil
     }
     
     required init?(coder: NSCoder) {

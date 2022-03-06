@@ -207,6 +207,7 @@ class MainViewController: UIViewController {
             if success {
                 if let resultAsCharacters = result {
                     self?.characterDataSource += resultAsCharacters
+                    
                 }
             } else {
                 print("could get characters: \(String(describing: error))")
@@ -409,9 +410,26 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         //populate cell data
         let character = characterDataSource[indexPath.row]
-        let cellData = CharacterCellViewModel(with: character)
         
-        cell.setContent(with: cellData)
+        let token = CharacterRetriever.shared.getCharacterImage(of: character.imageURL) { result in
+            do {
+                let image = try result.get()
+                let cellData = CharacterCellViewModel(with: character, image: image)
+                
+                DispatchQueue.main.async {
+                    cell.setContent(with: cellData)
+                }
+            } catch {
+                print(error)
+            }
+        }
+
+        cell.onReuse = {
+          if let token = token {
+              CharacterRetriever.shared.cancelRequest(token)
+          }
+        }
+        
         
         //when populating last cell - load next page if available
         if indexPath.row == characterDataSource.count - 3 {
@@ -421,33 +439,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         
         return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        //sometimes cells dont load when returning to view. this makes sure they do.
-
-        if let cell = cell as? CharacterCell {
-            if cell.imageContainer.image == nil {
-                guard characterDataSource.count > indexPath.row else { return }
-                let cellData = CharacterCellViewModel(with: characterDataSource[indexPath.row])
-                
-                cell.stopShimmering()
-                cell.setContent(with: cellData)
-            }
-            
-        }
-        
-
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        //remove cell image data when not displayed to save memory
-
-        if let cell = cell as? CharacterCell {
-            cell.imageContainer.image = nil
-            cell.title.text = nil
-        }
-
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

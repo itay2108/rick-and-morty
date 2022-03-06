@@ -20,7 +20,6 @@ struct Character: Codable, Equatable {
     let species: String
     let gender: String
     let imageURL: String
-    var image: UIImage? = nil
     let episodeURLList: [String]
     var episodeList: [Episode]? = nil
     let origin: Origin

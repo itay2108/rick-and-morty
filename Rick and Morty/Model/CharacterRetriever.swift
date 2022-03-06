@@ -15,74 +15,72 @@ class CharacterRetriever {
     static let baseURL: String = "https://rickandmortyapi.com/api/character"
     
     func getCharacters(url: String = baseURL, completion: @escaping ((_ success: Bool, _ result: [Character]?, _ nextPageURL: String?, _ error: AFError?) -> Void)) {
-        
-        DispatchQueue.global(qos: .background).async {
 
             let request = AF.request(url)
 
             request.responseDecodable(of: CharacterData.self) { response in
                 
                 if let error = response.error {
-                    DispatchQueue.main.async {
                         completion(false, nil, nil, error)
-                    }
                 } else {
                     if let retrievedCharacters = response.value?.results {
                         let nextPageURL = response.value?.info?.next
-                        DispatchQueue.main.async {
                             completion(true, retrievedCharacters, nextPageURL, nil)
-                        }
-                        
                     }
                 }
             }
-        }
- 
     }
     
     func getCharacters(by name: String, completion: @escaping ((_ success: Bool, _ result: [Character]?, _ nextPageURL: String?, _ error: AFError?) -> Void)) {
-        
-
-        DispatchQueue.global(qos: .background).async {
             
             let url = CharacterRetriever.baseURL + "/?name=" + name.replacingOccurrences(of: " ", with: "+")
             let request = AF.request(url)
             request.responseDecodable(of: CharacterData.self) { response in
                 
                 if let error = response.error {
-                    DispatchQueue.main.async {
                         completion(false, nil, nil, error)
-                    }
                 } else {
                     if let retrievedCharacters = response.value?.results {
                         let nextPageURL = response.value?.info?.next
-                        DispatchQueue.main.async {
                             completion(true, retrievedCharacters, nextPageURL, nil)
-                        }
                     }
                 }
             }
-        }
-        
     }
     
-    func getCharacterImage(of url: String, completion: @escaping ((_ success: Bool, _ result: UIImage?, _ error: AFError?) -> Void)) {
-        DispatchQueue.global(qos: .background).async {
-            AF.request(url).response { response in
-                guard let imageData = response.value as? Data else {
-                    DispatchQueue.main.async {
-                        completion(false, nil, response.error)
-                    }
+    private var loadedImages = [String: UIImage]()
+    private var runningRequests = [UUID: DataRequest]()
+    
+    func getCharacterImage(of url: String, _ completion: @escaping (Result<UIImage, Error>) -> Void) -> UUID? {
+        
+        if let image = loadedImages[url] {
+          completion(.success(image))
+          return nil
+        }
+
+        let uuid = UUID()
+        let request = AF.request(url)
+        
+        request.response { response in
+                
+            defer { self.runningRequests.removeValue(forKey: uuid) }
+                
+                guard let imageData = response.value as? Data,
+                      let image = UIImage(data: imageData, scale: 1) else {
+                    completion(.failure(CharacterRetrieverError.badResponse))
                     return
                 }
                 
-                if let image = UIImage(data: imageData, scale: 1) {
-                    DispatchQueue.main.async {
-                        completion(true, image, nil)
-                    }
-                }
+                completion(.success(image))
             }
-        }
+        
+        runningRequests[uuid] = request
+        return uuid
+    }
+    
+    func cancelRequest(_ uuid: UUID) {
+      runningRequests[uuid]?.cancel()
+      runningRequests.removeValue(forKey: uuid)
     }
     
     func getEpisodes(by idList: [Int], completion: @escaping ((_ success: Bool, _ result: [Episode]?, _ error: AFError?) -> Void)) {
