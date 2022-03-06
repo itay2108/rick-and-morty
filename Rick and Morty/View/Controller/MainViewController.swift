@@ -427,8 +427,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 
                 cell.stopShimmering()
                 cell.setContent(with: cellData)
-
-                collectionView.reloadItems(at: [indexPath])
             }
         }
 

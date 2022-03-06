@@ -76,7 +76,7 @@ class CharacterCell: UICollectionViewCell {
     }
     
     func setContent(with data: CharacterCellViewModel) {
-
+        
         self.title.text = data.name
         
         if data.image != nil && data.image != imageContainer.image {
