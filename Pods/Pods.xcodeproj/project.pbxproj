@@ -173,7 +173,7 @@
 		4ED4E4ACC88B862F3738F554B8D4C50B /* LayoutConstraintItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutConstraintItem.swift; path = Source/LayoutConstraintItem.swift; sourceTree = "<group>"; };
 		50CB5D5649F637E3BA828E39CB346E4E /* ConstraintMakerFinalizable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMakerFinalizable.swift; path = Source/ConstraintMakerFinalizable.swift; sourceTree = "<group>"; };
 		525492F8933F631D12FD77DA54FBA6D1 /* ConstraintMakerPriortizable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMakerPriortizable.swift; path = Source/ConstraintMakerPriortizable.swift; sourceTree = "<group>"; };
-		52F9A40080E6B63A1BC1EDC16C7491A8 /* SwiftFontName */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SwiftFontName; path = SwiftFontName.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		52F9A40080E6B63A1BC1EDC16C7491A8 /* SwiftFontName.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftFontName.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		585C43949C14E7FA2CBA974327D7CEA8 /* ConstraintMakerExtendable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMakerExtendable.swift; path = Source/ConstraintMakerExtendable.swift; sourceTree = "<group>"; };
 		5991CAAE8D73B3D4F9A5469A17E5DA87 /* ConstraintItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintItem.swift; path = Source/ConstraintItem.swift; sourceTree = "<group>"; };
 		5D36DE96F758B7E444AFCE0357C4EEF0 /* AFError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AFError.swift; path = Source/AFError.swift; sourceTree = "<group>"; };
@@ -210,7 +210,7 @@
 		984CB849AB9533AD55892D04C7D2C851 /* ConstraintMaker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMaker.swift; path = Source/ConstraintMaker.swift; sourceTree = "<group>"; };
 		984F7E8D826FE4E99BC8F9423C650FE2 /* ConstraintMakerRelatable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMakerRelatable.swift; path = Source/ConstraintMakerRelatable.swift; sourceTree = "<group>"; };
 		9A610B2FB5AC18921EB9BB521BF1FF9A /* ConstraintInsetTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintInsetTarget.swift; path = Source/ConstraintInsetTarget.swift; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9DA3E609D3D854A82590A86E4A52D80E /* AuthenticationInterceptor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthenticationInterceptor.swift; path = Source/AuthenticationInterceptor.swift; sourceTree = "<group>"; };
 		9DA7119B223BC6DA091CC6A7078D02BE /* Pods-Rick and Morty-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Rick and Morty-dummy.m"; sourceTree = "<group>"; };
 		9DF286A34759E8CB445312B4024E162A /* ConstraintConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintConfig.swift; path = Source/ConstraintConfig.swift; sourceTree = "<group>"; };
@@ -367,7 +367,6 @@
 				78A0442FB0BC932C39A432BA0A2244FC /* ShimmeringView.swift */,
 				1626EAC28720D744BB18BF145956FF9A /* Support Files */,
 			);
-			name = ShimmerSwift;
 			path = ShimmerSwift;
 			sourceTree = "<group>";
 		};
@@ -378,7 +377,7 @@
 				ACBC6EBB544A449C999DE4499C277717 /* Pods-Rick and Morty */,
 				93027197DCE144EF9A5DDF15E6C717AA /* ShimmerSwift */,
 				979486118B3E90C08386079D57962701 /* SnapKit */,
-				52F9A40080E6B63A1BC1EDC16C7491A8 /* SwiftFontName */,
+				52F9A40080E6B63A1BC1EDC16C7491A8 /* SwiftFontName.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -400,7 +399,6 @@
 				907CDC8957FAEB70ABF0909286B455D7 /* SwiftFontName.h */,
 				C40CA79A85804FB18B41AE61B9248D37 /* Support Files */,
 			);
-			name = SwiftFontName;
 			path = SwiftFontName;
 			sourceTree = "<group>";
 		};
@@ -460,7 +458,6 @@
 				20119C978E9377B080E061E657647914 /* Validation.swift */,
 				701C7A330572ABC37B987C6769D3A194 /* Support Files */,
 			);
-			name = Alamofire;
 			path = Alamofire;
 			sourceTree = "<group>";
 		};
@@ -520,7 +517,6 @@
 				AE905748B0A501BBAFBF3A2FA221D170 /* UILayoutSupport+Extensions.swift */,
 				849121BA43F7CB17B2C79BF2897DDE53 /* Support Files */,
 			);
-			name = SnapKit;
 			path = SnapKit;
 			sourceTree = "<group>";
 		};
@@ -660,7 +656,7 @@
 			);
 			name = SwiftFontName;
 			productName = SwiftFontName;
-			productReference = 52F9A40080E6B63A1BC1EDC16C7491A8 /* SwiftFontName */;
+			productReference = 52F9A40080E6B63A1BC1EDC16C7491A8 /* SwiftFontName.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		BF2974CEBD4F57BEFE88471BC9F6361A /* ShimmerSwift */ = {
@@ -706,7 +702,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1240;
-				LastUpgradeCheck = 1240;
+				LastUpgradeCheck = 1320;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -932,7 +928,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/SwiftFontName/SwiftFontName-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/SwiftFontName/SwiftFontName-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -967,7 +963,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/SwiftFontName/SwiftFontName-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/SwiftFontName/SwiftFontName-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

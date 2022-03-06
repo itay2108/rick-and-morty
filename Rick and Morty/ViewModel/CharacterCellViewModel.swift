@@ -16,6 +16,6 @@ struct CharacterCellViewModel {
     
     init(with character: Character) {
         self.name = character.name
-        self.imageUrl = character.image
+        self.imageUrl = character.imageURL
     }
 }

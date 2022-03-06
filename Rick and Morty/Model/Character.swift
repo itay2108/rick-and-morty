@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Character: Codable, Equatable {
     static func == (lhs: Character, rhs: Character) -> Bool {
@@ -18,7 +19,8 @@ struct Character: Codable, Equatable {
     let status: String
     let species: String
     let gender: String
-    let image: String
+    let imageURL: String
+    var image: UIImage? = nil
     let episodeURLList: [String]
     var episodeList: [Episode]? = nil
     let origin: Origin
@@ -39,7 +41,7 @@ struct Character: Codable, Equatable {
         case status
         case species
         case gender
-        case image
+        case imageURL = "image"
         case episodeURLList = "episode"
         case origin
         case location

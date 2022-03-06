@@ -313,7 +313,9 @@ class MainViewController: UIViewController {
     @objc private func scrollToTopButtonTapped(_ button: UIButton) {
         let numberOfItems = characterGallery.numberOfItems(inSection: 0)
         if numberOfItems >= 4 {
+            if let snapshot = characterDataSnapshot { characterDataSource = snapshot }
             characterGallery.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: true)
+            characterGallery.reloadData()
         }
         
     }
@@ -432,7 +434,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 cell.stopShimmering()
                 cell.setContent(with: cellData)
             }
+            
         }
+        
 
     }
 
